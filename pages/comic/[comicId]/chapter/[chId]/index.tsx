@@ -16,16 +16,9 @@ interface Props {
 const ChapterViewer: FC<Props> = ({ chapter, redirect }) => {
   const router = useRouter();
 
-  if (redirect) {
-    const { comicId } = router.query;
-    router.push(`/comic/${comicId}`);
-  }
-
   const { comicId } = router.query;
 
-  let pages: number[] = [...Array(chapter.pages)].map(
-    (value, index) => index + 1
-  );
+  let pages: number[] = [...Array(chapter.pages)].map((_, index) => index + 1);
 
   return (
     <MainLayout title={chapter.name}>
@@ -57,16 +50,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (!comic) {
     return {
-      props: {
-        redirect: true,
+      redirect: {
+        destination: "/",
+        permanent: false,
       },
     };
   }
 
   if (comic.chapters.length === 0) {
     return {
-      props: {
-        redirect: true,
+      redirect: {
+        destination: `/comic/${comicId}`,
+        permanent: false,
       },
     };
   }
@@ -78,21 +73,14 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   if (chapter) {
     return {
       props: {
-        chapter: chapter.map((chapter) => {
-          return {
-            _id: chapter!._id!.toString(),
-            name: chapter!.name,
-            pages: chapter!.pages,
-            chNumber: chapter!.chNumber,
-            language: chapter!.language,
-          };
-        })[0],
+        chapter: JSON.parse(JSON.stringify(chapter)),
       },
     };
   } else {
     return {
-      props: {
-        redirect: true,
+      redirect: {
+        destination: `/comic/${comicId}`,
+        permanent: false,
       },
     };
   }

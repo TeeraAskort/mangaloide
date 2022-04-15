@@ -19,10 +19,6 @@ const ChapterReadPaginated: FC<Props> = ({ chapter, redirect }) => {
 
   const { comicId, chId, pgNum } = router.query;
 
-  if (redirect) {
-    router.push(`/comic/${comicId}`);
-  }
-
   const changePage = (event: ChangeEvent<unknown>, page: number) => {
     router.push(`/comic/${comicId}/chapter/${chId}/page/${page}`);
   };
@@ -81,8 +77,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (!comic) {
     return {
-      props: {
-        redirect: true,
+      redirect: {
+        destination: "/",
+        permanent: false,
       },
     };
   }
@@ -93,21 +90,16 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   if (!chapter) {
     return {
-      props: {
-        redirect: true,
+      redirect: {
+        destination: `/comic/${comicId}`,
+        permanent: false,
       },
     };
   }
 
   return {
     props: {
-      chapter: {
-        _id: chapter._id!.toString(),
-        name: chapter.name!,
-        pages: chapter.pages,
-        chNumber: chapter.chNumber,
-        language: chapter.language,
-      },
+      chapter: JSON.parse(JSON.stringify(chapter)),
     },
   };
 }

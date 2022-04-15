@@ -78,14 +78,7 @@ export async function getServerSideProps() {
   let data: Comic[];
 
   if (comics.length !== 0) {
-    data = comics.map((comic) => {
-      return {
-        _id: comic._id.toString(),
-        name: comic.name,
-        description: comic.description,
-        author: comic.author,
-      } as Comic;
-    });
+    data = JSON.parse(JSON.stringify(comics));
   } else {
     data = [];
   }

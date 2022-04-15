@@ -101,31 +101,18 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const comic = await ComicModel.findById(comicId);
 
-  const comicToProps: Comic = {
-    _id: comic!._id.toString(),
-    author: comic!.author,
-    chapters: comic!.chapters.map((chapter) => {
-      return {
-        _id: chapter._id.toString(),
-        name: chapter.name,
-        pages: chapter.pages,
-        chNumber: chapter.chNumber,
-        language: chapter.language,
-      };
-    }),
-    description: comic!.description,
-    name: comic!.name,
-  };
-
   if (!comic) {
     return {
-      notFound: true,
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
     };
   }
 
   return {
     props: {
-      comic: comicToProps,
+      comic: JSON.parse(JSON.stringify(comic)),
     },
   };
 }
