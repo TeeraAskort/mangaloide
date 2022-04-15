@@ -44,8 +44,8 @@ const ComicDetailPage: FC<Props> = ({ comic }) => {
             <CardHeader title={comic.name} />
             <CardContent>
               <Typography variant="h6">Author: {comic.author}</Typography>
-              <Typography variant="body1">
-                Chapters: {comic.chapters.length}
+              <Typography variant="body1" sx={{ marginY: 2 }}>
+                Sinopsis: <br /> {comic.description}
               </Typography>
             </CardContent>
           </Card>
@@ -60,13 +60,14 @@ const ComicDetailPage: FC<Props> = ({ comic }) => {
                 <List>
                   {comic.chapters.map((chapter) => (
                     <ListItemButton
-                      href={`/comic/${comic._id}/chapter/${chapter.chNumber}`}
+                      component="a"
+                      href={`/comic/${comic._id}/chapter/${chapter._id}`}
                       key={chapter.chNumber}
                     >
                       <ListItemText
                         primary={`${chapter.chNumber} - ${
                           chapter.name !== "" ? chapter.name : "No chapter name"
-                        }`}
+                        } - ${chapter.language}`}
                       />
                     </ListItemButton>
                   ))}
@@ -105,6 +106,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     author: comic!.author,
     chapters: comic!.chapters.map((chapter) => {
       return {
+        _id: chapter._id.toString(),
         name: chapter.name,
         pages: chapter.pages,
         chNumber: chapter.chNumber,

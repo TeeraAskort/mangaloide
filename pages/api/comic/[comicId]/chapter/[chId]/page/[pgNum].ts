@@ -1,7 +1,6 @@
-import { NextRouter, useRouter } from "next/router";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../../../database";
-import { ComicModel } from "../../../../models";
+import { db } from "../../../../../../../database";
+import { ComicModel } from "../../../../../../../models";
 import fs from "fs";
 
 type Data =
@@ -10,22 +9,22 @@ type Data =
     }
   | File;
 
-export default function Handler(
+export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<Data>
 ) {
   switch (req.method) {
     case "GET":
-      return getImage(req, res);
+      return getPage(req, res);
 
     default:
-      return res.status(401).json({ message: "Method not allowed" });
+      return res.status(400).json({ message: "Method not allowed" });
   }
 }
 
-const getImage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
+const getPage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   try {
-    const { comicId } = req.query;
+    const { comicId, chId, pgNum } = req.query;
 
     await db.connect();
 
@@ -35,7 +34,15 @@ const getImage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       return res.status(404).json({ message: "Comic not found" });
     }
 
-    const imagePath = `${process.env.COMICS_PATH}/${comic?.name}/image.jpg`;
+    const chapter = comic.chapters.filter(
+      (chapter) => chapter._id.toString() === chId
+    )[0];
+
+    if (!chapter) {
+      return res.status(404).json({ message: "Chapter not found" });
+    }
+
+    const imagePath = `${process.env.COMICS_PATH}/${comic.name}/${chapter.chNumber}-${chapter.language}/${pgNum}.jpg`;
 
     const stat = fs.statSync(imagePath);
 
