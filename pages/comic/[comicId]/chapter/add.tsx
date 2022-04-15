@@ -51,7 +51,7 @@ const AddChapter = () => {
 
         const { comicId } = router.query;
 
-        const comic = await comicsApi.post<Comic>(
+        const { data } = await comicsApi.post<Comic>(
           `/comic/${comicId}/chapter`,
           bodyFormData,
           {
@@ -61,9 +61,11 @@ const AddChapter = () => {
           }
         );
 
-        if (!comic) {
+        if (!data) {
           setError("Error");
         }
+
+        router.push(`/comic/${data._id}`);
       } catch (error) {}
     }
   };

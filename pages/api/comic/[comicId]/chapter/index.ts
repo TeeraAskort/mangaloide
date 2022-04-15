@@ -87,11 +87,9 @@ const postChapter = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
           let filesPath = await walk(tmpPath, destPath, []);
 
-          let i = 1;
-
-          filesPath.forEach((file) => {
+          filesPath.forEach((file, index) => {
             Jimp.read(file).then((image) =>
-              image.quality(90).write(`${destPath}/${i++}.jpg`)
+              image.quality(90).write(`${destPath}/${index + 1}.jpg`)
             );
           });
 
