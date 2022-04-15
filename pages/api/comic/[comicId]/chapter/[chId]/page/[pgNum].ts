@@ -35,7 +35,7 @@ const getPage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     }
 
     const chapter = comic.chapters.filter(
-      (chapter) => chapter._id.toString() === chId
+      (chapter) => chapter._id!.toString() === chId
     )[0];
 
     if (!chapter) {

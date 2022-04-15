@@ -29,22 +29,21 @@ const ChapterViewer: FC<Props> = ({ chapter, redirect }) => {
 
   return (
     <MainLayout title={chapter.name}>
-      {/* <Grid container spacing={2} justifyContent="center" alignContent="center"> */}
-      {pages.map((num) => (
-        // <Grid item key={num} xs={12} sm={10}>
-        <Image
-          key={num}
-          src={`/api/comic/${comicId}/chapter/${chapter._id}/page/${num}`}
-          alt={`Page ${num}`}
-          layout="responsive"
-          width="100%"
-          height="100%"
-          objectFit="contain"
-          style={{ marginTop: "20px" }}
-        />
-        // </Grid>
-      ))}
-      {/* </Grid> */}
+      <Grid container spacing={2} justifyContent="center" alignContent="center">
+        {pages.map((num) => (
+          <Grid item key={num} xs={12} sm={10}>
+            <Image
+              key={num}
+              src={`/api/comic/${comicId}/chapter/${chapter._id}/page/${num}`}
+              alt={`Page ${num}`}
+              layout="responsive"
+              width="100%"
+              height="100%"
+              objectFit="contain"
+            />
+          </Grid>
+        ))}
+      </Grid>
     </MainLayout>
   );
 };

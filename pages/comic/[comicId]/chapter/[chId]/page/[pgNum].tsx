@@ -30,9 +30,13 @@ const ChapterReadPaginated: FC<Props> = ({ chapter, redirect }) => {
   return (
     <MainLayout title={chapter.name}>
       <Link
-        href={`/comic/${comicId}/chapter/${chId}/page/${
-          parseInt(pgNum as string) + 1
-        }`}
+        href={
+          parseInt(pgNum as string) + 1 <= chapter.pages
+            ? `/comic/${comicId}/chapter/${chId}/page/${
+                parseInt(pgNum as string) + 1
+              }`
+            : `/comic/${comicId}`
+        }
         passHref
       >
         <Image
@@ -69,7 +73,7 @@ const ChapterReadPaginated: FC<Props> = ({ chapter, redirect }) => {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { comicId, chId, pgNum } = context.params;
+  const { comicId, chId } = context.params!;
 
   await db.connect();
 

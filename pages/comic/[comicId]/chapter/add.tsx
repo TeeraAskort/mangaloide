@@ -6,6 +6,11 @@ import {
   TextField,
   CardHeader,
   Grid,
+  Select,
+  MenuItem,
+  SelectChangeEvent,
+  InputLabel,
+  FormControl,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import { ChangeEvent } from "react";
@@ -13,6 +18,8 @@ import { useState } from "react";
 import { MainLayout } from "../../../../layouts";
 import { comicsApi } from "../../../../apis";
 import { Comic } from "../../../../interfaces";
+
+const languages = ["EN", "ES", "CAT", "VA"];
 
 const AddChapter = () => {
   const router = useRouter();
@@ -32,8 +39,8 @@ const AddChapter = () => {
     setChNumber(event.target.value);
   };
 
-  const onLanguageChanged = (event: ChangeEvent<HTMLInputElement>) => {
-    setLanguage(event.target.value);
+  const onLanguageChanged = (event: SelectChangeEvent) => {
+    setLanguage(event.target.value as string);
   };
 
   const onFileChanged = (event: ChangeEvent<HTMLInputElement>) => {
@@ -97,17 +104,21 @@ const AddChapter = () => {
                 error={chNumber.length <= 0 && touched}
                 onBlur={() => setTouched(true)}
               />
-              <TextField
-                label="Language"
-                variant="outlined"
-                fullWidth
-                multiline
-                sx={{ marginY: 2 }}
-                value={language}
-                onChange={onLanguageChanged}
-                error={language.length <= 0 && touched}
-                onBlur={() => setTouched(true)}
-              />
+              <FormControl sx={{ minWidth: "150px" }}>
+                <InputLabel id="language-label">Language</InputLabel>
+                <Select
+                  labelId="language-label"
+                  value={language}
+                  label="Language"
+                  onChange={onLanguageChanged}
+                >
+                  {languages.map((lang) => (
+                    <MenuItem value={lang} key={lang}>
+                      {lang}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
               <Box sx={{ flex: 1, marginY: 2 }}>
                 <Button variant="contained" component="label">
                   Upload zip
