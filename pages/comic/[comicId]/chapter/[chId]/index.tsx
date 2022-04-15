@@ -10,10 +10,9 @@ import Image from "next/image";
 
 interface Props {
   chapter: Chapter;
-  redirect: boolean;
 }
 
-const ChapterViewer: FC<Props> = ({ chapter, redirect }) => {
+const ChapterViewer: FC<Props> = ({ chapter }) => {
   const router = useRouter();
 
   const { comicId } = router.query;

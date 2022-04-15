@@ -10,11 +10,10 @@ import { MainLayout } from "../../../../../../layouts";
 import { ComicModel } from "../../../../../../models";
 
 interface Props {
-  redirect: boolean;
   chapter: Chapter;
 }
 
-const ChapterReadPaginated: FC<Props> = ({ chapter, redirect }) => {
+const ChapterReadPaginated: FC<Props> = ({ chapter }) => {
   const router = useRouter();
 
   const { comicId, chId, pgNum } = router.query;
