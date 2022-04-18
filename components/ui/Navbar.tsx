@@ -8,27 +8,26 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { FC, useContext } from "react";
+import { FC, useContext, useEffect, useState } from "react";
 import { UIContext } from "../../context/ui";
 import { grey } from "@mui/material/colors";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
-import { GetServerSideProps } from "next";
 
-interface Props {
-  nsfw: boolean;
-}
-
-export const Navbar: FC<Props> = ({ nsfw }) => {
-  const { openSideMenu, toggleNSFW } = useContext(UIContext);
-
+export const Navbar: FC = () => {
   const router = useRouter();
 
-  let showNSFW: boolean = nsfw;
+  const { openSideMenu } = useContext(UIContext);
+
+  const [showNSFW, setShowNSFW] = useState(false);
+
+  useEffect(() => {
+    const nsfw = Cookies.get("nsfw") || false;
+    setShowNSFW(Boolean(nsfw));
+  }, []);
 
   const onChangeNSFW = () => {
-    toggleNSFW();
-    showNSFW = !showNSFW;
+    setShowNSFW(!showNSFW);
     Cookies.set("nsfw", String(showNSFW));
   };
 
@@ -47,6 +46,7 @@ export const Navbar: FC<Props> = ({ nsfw }) => {
             Mangaloide
           </Typography>
         </Link>
+
         {router.asPath === "/" ? (
           <FormControlLabel
             control={
@@ -64,14 +64,4 @@ export const Navbar: FC<Props> = ({ nsfw }) => {
       </Toolbar>
     </AppBar>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const { nsfw } = await ctx.req.cookies; // your fetch function here
-
-  return {
-    props: {
-      nsfw: nsfw === "true" ? true : false,
-    },
-  };
 };

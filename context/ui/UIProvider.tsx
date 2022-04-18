@@ -6,12 +6,10 @@ import { UIContext, uiReducer } from "./";
 
 export interface UIState {
   sidemenuOpen: boolean;
-  showNSFW: boolean;
 }
 
 const UI_INITIAL_STATE: UIState = {
   sidemenuOpen: false,
-  showNSFW: Cookies.get("nsfw") === "true" ? true : false,
 };
 
 interface Props {
@@ -33,16 +31,8 @@ export const UIProvider: FC<Props> = ({ children }) => {
     });
   };
 
-  const toggleNSFW = () => {
-    dispatch({
-      type: "UI - Toggle NSFW",
-    });
-  };
-
   return (
-    <UIContext.Provider
-      value={{ ...state, openSideMenu, closeSideMenu, toggleNSFW }}
-    >
+    <UIContext.Provider value={{ ...state, openSideMenu, closeSideMenu }}>
       {children}
     </UIContext.Provider>
   );

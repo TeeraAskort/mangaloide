@@ -32,7 +32,7 @@ const Home: NextPage<Props> = ({ newComics }) => {
         <Grid container justifyContent="center" spacing={2}>
           {newComics.map((comic) => (
             <Grid item xs={12} sm={6} md={4} xl={2} key={comic._id}>
-              <Card>
+              <Card sx={{ border: comic.nsfw ? "1px solid red" : "" }}>
                 <CardActionArea href={`/comic/${comic._id}`}>
                   <CardMedia
                     component={"img"}
@@ -72,15 +72,13 @@ const Home: NextPage<Props> = ({ newComics }) => {
 };
 
 export async function getServerSideProps(context: GetServerSidePropsContext) {
-  const { nsfw } = context.req.cookies;
-
-  console.log(nsfw);
-
   await db.connect();
+
+  const { nsfw } = context.req.cookies;
 
   let comics: Comic[];
 
-  if (nsfw === "true") {
+  if (nsfw) {
     comics = await ComicModel.find().limit(20);
   } else {
     comics = await ComicModel.find({ nsfw: false }).limit(20);

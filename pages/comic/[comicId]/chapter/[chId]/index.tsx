@@ -67,7 +67,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   const chapter = comic!.chapters.filter(
     (chapter) => chapter._id!.toString() === chId
-  );
+  )[0];
 
   if (chapter) {
     return {

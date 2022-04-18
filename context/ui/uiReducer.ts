@@ -6,9 +6,6 @@ type UIActionType =
     }
   | {
       type: "UI - Open Sidebar";
-    }
-  | {
-      type: "UI - Toggle NSFW";
     };
 
 export const uiReducer = (state: UIState, action: UIActionType): UIState => {
@@ -23,12 +20,6 @@ export const uiReducer = (state: UIState, action: UIActionType): UIState => {
       return {
         ...state,
         sidemenuOpen: true,
-      };
-
-    case "UI - Toggle NSFW":
-      return {
-        ...state,
-        showNSFW: !state.showNSFW,
       };
 
     default:
