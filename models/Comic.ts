@@ -17,6 +17,10 @@ const comicSchema = new Schema<IComic>({
     type: String,
     required: true,
   },
+  nsfw: {
+    type: Boolean,
+    required: true,
+  },
   chapters: [
     {
       name: String,

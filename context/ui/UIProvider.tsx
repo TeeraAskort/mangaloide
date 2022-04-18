@@ -1,3 +1,4 @@
+import Cookies from "js-cookie";
 import { ReactNode } from "react";
 import { useReducer } from "react";
 import { FC } from "react";
@@ -10,7 +11,7 @@ export interface UIState {
 
 const UI_INITIAL_STATE: UIState = {
   sidemenuOpen: false,
-  showNSFW: false,
+  showNSFW: Cookies.get("nsfw") === "true" ? true : false,
 };
 
 interface Props {

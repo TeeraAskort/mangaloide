@@ -63,10 +63,10 @@ const postComic = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     }
 
     // Obtain the form data
-    const { name, description, author } = fields;
+    const { name, description, author, nsfw } = fields;
 
     // If the data has been input, create a new entry on the database
-    if (name && description && author && files.file) {
+    if (name && description && author && files.file && nsfw) {
       if (!mimeTypes.includes(files.file[0].mimetype)) {
         return res.status(400).json({
           message: "Image type not supported",
@@ -118,6 +118,7 @@ const postComic = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
           name: name[0],
           description: description[0],
           author: author[0],
+          nsfw: nsfw[0] === "true" ? true : false,
         });
 
         await newComic.save();

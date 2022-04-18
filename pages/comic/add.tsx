@@ -4,11 +4,15 @@ import {
   Card,
   CardContent,
   CardHeader,
+  Checkbox,
+  FormControlLabel,
+  FormGroup,
   Grid,
   TextField,
 } from "@mui/material";
+import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, SyntheticEvent, useState } from "react";
 import { comicsApi } from "../../apis";
 import { Comic } from "../../interfaces";
 import { MainLayout } from "../../layouts";
@@ -19,6 +23,7 @@ const AddComicPage = () => {
   const [name, setName] = useState("");
   const [author, setAuthor] = useState("");
   const [description, setDescription] = useState("");
+  const [nsfw, setNsfw] = useState(false);
   const [image, setImage] = useState<File | null | undefined>(null);
   const [touched, setTouched] = useState(false);
 
@@ -40,6 +45,10 @@ const AddComicPage = () => {
     setImage(event.target.files?.item(0));
   };
 
+  const onNSFWChanged = (event: SyntheticEvent, checked: boolean) => {
+    setNsfw(checked);
+  };
+
   const send = async () => {
     if (image && name && author && description) {
       try {
@@ -48,6 +57,7 @@ const AddComicPage = () => {
         bodyFormData.append("author", author);
         bodyFormData.append("description", description);
         bodyFormData.append("file", image);
+        bodyFormData.append("nsfw", String(nsfw));
 
         const comic = await comicsApi.post<Comic>("/comic", bodyFormData, {
           headers: {
@@ -104,6 +114,14 @@ const AddComicPage = () => {
                 error={description.length <= 0 && touched}
                 onBlur={() => setTouched(true)}
               />
+              <FormGroup>
+                <FormControlLabel
+                  control={<Checkbox />}
+                  label="NSFW"
+                  value={nsfw}
+                  onChange={onNSFWChanged}
+                />
+              </FormGroup>
               <Box sx={{ flex: 1, marginY: 2 }}>
                 <Button variant="contained" component="label">
                   Upload image

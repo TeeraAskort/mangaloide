@@ -25,6 +25,7 @@ const Home: NextPage<Props> = ({ newComics }) => {
   const goToComicAdd = () => {
     router.push("/comic/add");
   };
+
   return (
     <MainLayout title="Mangaloide - Home">
       {newComics.length !== 0 ? (
@@ -70,22 +71,24 @@ const Home: NextPage<Props> = ({ newComics }) => {
   );
 };
 
-export async function getServerSideProps() {
+export async function getServerSideProps(context: GetServerSidePropsContext) {
+  const { nsfw } = context.req.cookies;
+
+  console.log(nsfw);
+
   await db.connect();
 
-  const comics = await ComicModel.find().limit(20);
+  let comics: Comic[];
 
-  let data: Comic[];
-
-  if (comics.length !== 0) {
-    data = JSON.parse(JSON.stringify(comics));
+  if (nsfw === "true") {
+    comics = await ComicModel.find().limit(20);
   } else {
-    data = [];
+    comics = await ComicModel.find({ nsfw: false }).limit(20);
   }
 
   return {
     props: {
-      newComics: data,
+      newComics: JSON.parse(JSON.stringify(comics)),
     },
   };
 }
