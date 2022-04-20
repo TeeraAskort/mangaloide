@@ -59,6 +59,8 @@ const AddComicPage = () => {
         bodyFormData.append("file", image);
         bodyFormData.append("nsfw", String(nsfw));
 
+        console.log(bodyFormData);
+
         const comic = await comicsApi.post<Comic>("/comic", bodyFormData, {
           headers: {
             "Content-Type": "multipart/form-data",
@@ -69,6 +71,7 @@ const AddComicPage = () => {
           router.push("/");
         }
       } catch (error: any) {
+        console.log(error);
         setError(error);
       }
     } else {

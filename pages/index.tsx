@@ -78,10 +78,10 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   let comics: Comic[];
 
-  if (nsfw) {
-    comics = await ComicModel.find().limit(20);
+  if (nsfw && nsfw === "true") {
+    comics = await ComicModel.find().sort("-date").limit(20);
   } else {
-    comics = await ComicModel.find({ nsfw: false }).limit(20);
+    comics = await ComicModel.find({ nsfw: false }).sort("-date").limit(20);
   }
 
   return {

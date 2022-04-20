@@ -8,7 +8,7 @@ import {
   Typography,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import { FC, useContext, useEffect, useState } from "react";
+import { ChangeEvent, FC, useContext, useEffect, useState } from "react";
 import { UIContext } from "../../context/ui";
 import { grey } from "@mui/material/colors";
 import { useRouter } from "next/router";
@@ -19,16 +19,20 @@ export const Navbar: FC = () => {
 
   const { openSideMenu } = useContext(UIContext);
 
-  const [showNSFW, setShowNSFW] = useState(false);
+  const [showNSFW, setShowNSFW] = useState<boolean>(false);
 
   useEffect(() => {
-    const nsfw = Cookies.get("nsfw") || false;
-    setShowNSFW(Boolean(nsfw));
+    setTimeout(() => {
+      setShowNSFW(Cookies.get("nsfw") === "true");
+    }, 200);
   }, []);
 
-  const onChangeNSFW = () => {
-    setShowNSFW(!showNSFW);
-    Cookies.set("nsfw", String(showNSFW));
+  const onChangeNSFW = (event: ChangeEvent, checked: boolean) => {
+    setShowNSFW(checked);
+    Cookies.set("nsfw", JSON.stringify(checked));
+    setTimeout(() => {
+      router.reload();
+    }, 300);
   };
 
   return (
@@ -49,13 +53,7 @@ export const Navbar: FC = () => {
 
         {router.asPath === "/" ? (
           <FormControlLabel
-            control={
-              <Checkbox
-                value={showNSFW}
-                checked={showNSFW}
-                onChange={onChangeNSFW}
-              />
-            }
+            control={<Checkbox checked={showNSFW} onChange={onChangeNSFW} />}
             label={"Show NSFW"}
           />
         ) : (
