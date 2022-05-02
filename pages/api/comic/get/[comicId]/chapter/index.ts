@@ -1,9 +1,9 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
 import Jimp from "jimp";
-import { db } from "../../../../../database";
-import { ComicModel } from "../../../../../models";
-import { IComic } from "../../../../../models/Comic";
+import { db } from "../../../../../../database";
+import { ComicModel } from "../../../../../../models";
+import { IComic } from "../../../../../../models/Comic";
 import AdmZip from "adm-zip";
 import fs from "fs";
 import mime from "mime-types";

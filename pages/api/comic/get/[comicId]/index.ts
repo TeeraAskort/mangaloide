@@ -1,7 +1,7 @@
-import { IComic } from "./../../../../models/Comic";
+import { IComic } from "./../../../../../models/Comic";
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../../../database";
-import { ComicModel } from "../../../../models";
+import { db } from "../../../../../database";
+import { ComicModel } from "../../../../../models";
 
 type Data =
   | {

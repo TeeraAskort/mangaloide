@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../../../../../../database";
-import { ComicModel } from "../../../../../../../models";
+import { db } from "../../../../../../../../database";
+import { ComicModel } from "../../../../../../../../models";
 import fs from "fs";
 
 type Data =

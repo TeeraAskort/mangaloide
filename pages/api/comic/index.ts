@@ -5,6 +5,7 @@ import { ComicModel } from "../../../models";
 import formidable from "formidable";
 import fs from "fs";
 import Jimp from "jimp";
+import { Tag } from "../../../interfaces";
 
 const mimeTypes = ["image/png", "image/gif", "image/jpeg", "image/jpg"];
 
@@ -63,7 +64,7 @@ const postComic = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     }
 
     // Obtain the form data
-    const { name, description, author, nsfw } = fields;
+    const { name, description, author, nsfw, tags } = fields;
 
     // If the data has been input, create a new entry on the database
     if (name && description && author && files.file && nsfw) {
@@ -112,19 +113,27 @@ const postComic = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
           `${process.env.TMP_PATH}/${files.file[0].originalFilename}`
         );
 
-        console.log(name, description, author);
+        if (tags.length === 0) {
+          return res.status(400).json({
+            message: "You need to add tags to the comic",
+          });
+        }
+
+        console.log(tags);
 
         const newComic = new ComicModel({
           name: name[0],
           description: description[0],
           author: author[0],
           nsfw: nsfw[0] === "true" ? true : false,
+          tags: tags[0].split(","),
         });
 
         await newComic.save();
 
         return res.status(201).json(newComic);
       } catch (error) {
+        console.log(error);
         return res.status(500).json({ message: "Backend error" });
       }
     } else {

@@ -5,16 +5,23 @@ import {
   CardContent,
   CardHeader,
   Checkbox,
+  Chip,
+  FormControl,
   FormControlLabel,
   FormGroup,
   Grid,
+  InputLabel,
+  MenuItem,
+  Select,
+  SelectChangeEvent,
   TextField,
+  Typography,
 } from "@mui/material";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
 import React, { ChangeEvent, SyntheticEvent, useState } from "react";
 import { comicsApi } from "../../apis";
-import { Comic } from "../../interfaces";
+import { Comic, Tag } from "../../interfaces";
 import { MainLayout } from "../../layouts";
 
 const AddComicPage = () => {
@@ -25,6 +32,8 @@ const AddComicPage = () => {
   const [description, setDescription] = useState("");
   const [nsfw, setNsfw] = useState(false);
   const [image, setImage] = useState<File | null | undefined>(null);
+  const [tags, setTags] = useState<Tag[]>([]);
+  const [selectedTag, setSelectedTag] = useState<string>("");
   const [touched, setTouched] = useState(false);
 
   const [error, setError] = useState("");
@@ -49,8 +58,31 @@ const AddComicPage = () => {
     setNsfw(checked);
   };
 
+  const changeSelectedTag = (event: SelectChangeEvent) => {
+    setSelectedTag(event.target.value);
+  };
+
+  const addTag = () => {
+    if (selectedTag !== "") {
+      const match = Object.entries(Tag).find(
+        ([key, value]) => key === selectedTag
+      );
+      if (!tags.includes(match![1])) {
+        setTags([...tags, match![1]]);
+      }
+    }
+  };
+
+  const deleteTag = (index: number) => {
+    return () => {
+      const tmp = tags;
+      tmp.splice(index, 1);
+      setTags([...tmp]);
+    };
+  };
+
   const send = async () => {
-    if (image && name && author && description) {
+    if (image && name && author && description && tags.length > 0) {
       try {
         const bodyFormData = new FormData();
         bodyFormData.append("name", name);
@@ -58,6 +90,21 @@ const AddComicPage = () => {
         bodyFormData.append("description", description);
         bodyFormData.append("file", image);
         bodyFormData.append("nsfw", String(nsfw));
+
+        let tagRes: string = "";
+
+        tags.forEach((tag, index) => {
+          const match = Object.entries(Tag).find(
+            ([key, value]) => value === tag
+          );
+          if (index === 0) {
+            tagRes = `${match![0]}`;
+          } else {
+            tagRes = `${tagRes},${match![0]}`;
+          }
+        });
+
+        bodyFormData.append("tags", tagRes);
 
         console.log(bodyFormData);
 
@@ -72,7 +119,7 @@ const AddComicPage = () => {
         }
       } catch (error: any) {
         console.log(error);
-        setError(error);
+        setError(error.error.message);
       }
     } else {
       setError("You have to enter all data");
@@ -125,6 +172,34 @@ const AddComicPage = () => {
                   onChange={onNSFWChanged}
                 />
               </FormGroup>
+              <FormControl fullWidth>
+                <InputLabel id="tags">Tags</InputLabel>
+                <Select
+                  labelId="tags"
+                  id="tagsSelect"
+                  value={selectedTag}
+                  label="Tags"
+                  onChange={changeSelectedTag}
+                >
+                  {Object.keys(Tag).map((tag) => (
+                    <MenuItem value={tag} key={tag}>
+                      {tag}
+                    </MenuItem>
+                  ))}
+                </Select>
+                <Button onClick={addTag}>Add tag</Button>
+              </FormControl>
+
+              <Box sx={{ flex: 1, my: 2 }}>
+                {tags.map((tag, index) => (
+                  <Chip
+                    key={tag}
+                    label={tag}
+                    variant="outlined"
+                    onDelete={deleteTag(index)}
+                  />
+                ))}
+              </Box>
               <Box sx={{ flex: 1, marginY: 2 }}>
                 <Button variant="contained" component="label">
                   Upload image

@@ -1,5 +1,5 @@
 import { Chapter } from "./../interfaces/Chapter";
-import { Comic } from "../interfaces";
+import { Comic, Tag } from "../interfaces";
 import mongoose, { Model, Schema, Types } from "mongoose";
 
 export interface IComic extends Comic {}
@@ -19,6 +19,10 @@ const comicSchema = new Schema<IComic>({
   },
   nsfw: {
     type: Boolean,
+    required: true,
+  },
+  tags: {
+    type: [String],
     required: true,
   },
   chapters: [

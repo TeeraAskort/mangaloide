@@ -1,4 +1,5 @@
 import { Chapter } from "./";
+import { Tag } from "./Tag";
 
 export interface Comic {
   _id: string;
@@ -7,4 +8,5 @@ export interface Comic {
   author: string;
   chapters: Chapter[];
   nsfw: boolean;
+  tags: string[];
 }
