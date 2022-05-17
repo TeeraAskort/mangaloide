@@ -30,15 +30,17 @@ export const AuthProvider: FC<Props> = ({ children }) => {
   }, []);
 
   const checkToken = async () => {
-    try {
-      const { data } = await comicsApi.get<UserResponse>(
-        "/auth/validate-token"
-      );
-      const { token, user } = data;
-      Cookies.set("token", token!);
-      dispatch({ type: "[Auth] - Login", payload: user! });
-    } catch (error) {
-      Cookies.remove("token");
+    if (Cookies.get("token")) {
+      try {
+        const { data } = await comicsApi.get<UserResponse>(
+          "/auth/validate-token"
+        );
+        const { token, user } = data;
+        Cookies.set("token", token!);
+        dispatch({ type: "[Auth] - Login", payload: user! });
+      } catch (error) {
+        Cookies.remove("token");
+      }
     }
   };
 
@@ -59,13 +61,13 @@ export const AuthProvider: FC<Props> = ({ children }) => {
 
   const registerUser = async (
     email: string,
-    name: string,
+    username: string,
     password: string
   ): Promise<{ hasError: boolean; message?: string }> => {
     try {
       const { data } = await comicsApi.post<UserResponse>("/auth/register", {
         email,
-        name,
+        username,
         password,
       });
       const { token, user } = data;

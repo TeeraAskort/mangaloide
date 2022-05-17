@@ -28,12 +28,12 @@ export const Sidebar = () => {
 
   const goLogin = () => {
     closeSideMenu();
-    router.push("/login");
+    router.push("/auth/login");
   };
 
   const goRegister = () => {
     closeSideMenu();
-    router.push("/register");
+    router.push("/auth/register");
   };
 
   return (

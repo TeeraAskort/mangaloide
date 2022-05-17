@@ -7,7 +7,7 @@ export interface ContextProps {
   loginUser: (email: string, password: string) => Promise<boolean>;
   registerUser: (
     email: string,
-    name: string,
+    username: string,
     password: string
   ) => Promise<{
     hasError: boolean;
