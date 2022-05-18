@@ -19,6 +19,7 @@ import { useRouter } from "next/router";
 import { darkTheme } from "../../../themes";
 import AddIcon from "@mui/icons-material/Add";
 import { db } from "../../../database";
+import Cookies from "js-cookie";
 
 interface Props {
   comic: Comic;
@@ -29,6 +30,19 @@ const ComicDetailPage: FC<Props> = ({ comic }) => {
 
   const goToChapterAdd = () => {
     router.push(`/comic/${comic._id}/chapter/add`);
+  };
+
+  const goToChapter = (comicId: string, chapterId: string) => {
+    if (Cookies.get("strip")) {
+      const strip = Boolean(Cookies.get("strip"));
+      if (strip) {
+        router.push(`/comic/${comicId}/chapter/${chapterId}`);
+      } else {
+        router.push(`/comic/${comicId}/chapter/${chapterId}/page/1`);
+      }
+    } else {
+      router.push(`/comic/${comicId}/chapter/${chapterId}/page/1`);
+    }
   };
 
   return (
@@ -61,7 +75,7 @@ const ComicDetailPage: FC<Props> = ({ comic }) => {
                   {comic.chapters.map((chapter) => (
                     <ListItemButton
                       component="a"
-                      href={`/comic/${comic._id}/chapter/${chapter._id}`}
+                      onClick={() => goToChapter(comic._id, chapter._id!)}
                       key={chapter.chNumber}
                     >
                       <ListItemText

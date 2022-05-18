@@ -35,7 +35,7 @@ const ChapterReadPaginated: FC<Props> = ({ chapter }) => {
         passHref
       >
         <Image
-          src={`/api/comic/${comicId}/chapter/${chId}/page/${pgNum}`}
+          src={`/api/comic/get/${comicId}/chapter/${chId}/page/${pgNum}`}
           alt={`Page ${pgNum}`}
           layout="responsive"
           width="100%"

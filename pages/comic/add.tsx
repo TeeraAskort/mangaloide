@@ -34,14 +34,6 @@ import { MainLayout } from "../../layouts";
 const AddComicPage = () => {
   const router = useRouter();
 
-  const { isLoggedIn } = useContext(AuthContext);
-
-  useEffect(() => {
-    if (!isLoggedIn) {
-      router.push("/auth/login");
-    }
-  });
-
   const [name, setName] = useState("");
   const [author, setAuthor] = useState("");
   const [description, setDescription] = useState("");

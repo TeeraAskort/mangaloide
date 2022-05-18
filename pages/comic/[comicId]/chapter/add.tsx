@@ -68,7 +68,7 @@ const AddChapter = () => {
         const { comicId } = router.query;
 
         const { data } = await comicsApi.post<Comic>(
-          `/comic/${comicId}/chapter`,
+          `/comic/get/${comicId}/chapter`,
           bodyFormData,
           {
             headers: {

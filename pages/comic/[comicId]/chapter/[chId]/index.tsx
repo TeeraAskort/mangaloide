@@ -26,7 +26,7 @@ const ChapterViewer: FC<Props> = ({ chapter }) => {
           <Grid item key={num} xs={12} sm={10}>
             <Image
               key={num}
-              src={`/api/comic/${comicId}/chapter/${chapter._id}/page/${num}`}
+              src={`/api/comic/get/${comicId}/chapter/${chapter._id}/page/${num}`}
               alt={`Page ${num}`}
               layout="responsive"
               width="100%"

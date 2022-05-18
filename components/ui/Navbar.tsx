@@ -20,6 +20,7 @@ export const Navbar: FC = () => {
   const { openSideMenu } = useContext(UIContext);
 
   const [showNSFW, setShowNSFW] = useState<boolean>(false);
+  const [strip, setStrip] = useState(false);
 
   useEffect(() => {
     setTimeout(() => {
@@ -27,12 +28,29 @@ export const Navbar: FC = () => {
     }, 200);
   }, []);
 
+  useEffect(() => {
+    setTimeout(() => {
+      setStrip(Cookies.get("strip") === "true");
+    }, 200);
+  });
+
   const onChangeNSFW = (event: ChangeEvent, checked: boolean) => {
     setShowNSFW(checked);
     Cookies.set("nsfw", JSON.stringify(checked));
     setTimeout(() => {
       router.reload();
     }, 300);
+  };
+
+  const changePagination = (event: ChangeEvent, checked: boolean) => {
+    setStrip(checked);
+    Cookies.set("strip", JSON.stringify(checked));
+    const { comicId, chId } = router.query;
+    if (router.pathname.includes("/page/[pgNum]")) {
+      router.replace(`/comic/${comicId}/chapter/${chId}`);
+    } else {
+      router.replace(`/comic/${comicId}/chapter/${chId}/page/1`);
+    }
   };
 
   return (
@@ -55,6 +73,15 @@ export const Navbar: FC = () => {
           <FormControlLabel
             control={<Checkbox checked={showNSFW} onChange={onChangeNSFW} />}
             label={"Show NSFW"}
+          />
+        ) : (
+          ""
+        )}
+
+        {router.pathname.includes("/comic/[comicId]/chapter/[chId]") ? (
+          <FormControlLabel
+            control={<Checkbox checked={strip} onChange={changePagination} />}
+            label="Continuous strip"
           />
         ) : (
           ""
