@@ -1,5 +1,4 @@
 import { Error } from "@mui/icons-material";
-import { Chip } from "@mui/material";
 import {
   Button,
   Card,
@@ -7,6 +6,7 @@ import {
   CardHeader,
   Grid,
   TextField,
+  Chip,
 } from "@mui/material";
 import { useRouter } from "next/router";
 import React, { ChangeEvent, useContext, useState } from "react";
@@ -38,7 +38,9 @@ const RegisterPage = () => {
 
   const [errorMessage, setErrorMessage] = useState("");
 
-  const checkPasswordsAreTheSame = (repeatPassword): string | undefined => {
+  const checkPasswordsAreTheSame = (
+    repeatPassword: string
+  ): string | undefined => {
     return repeatPassword === getValues("password")
       ? undefined
       : "Passwords do not match";

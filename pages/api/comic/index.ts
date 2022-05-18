@@ -5,7 +5,6 @@ import { ComicModel } from "../../../models";
 import formidable from "formidable";
 import fs from "fs";
 import Jimp from "jimp";
-import { Tag } from "../../../interfaces";
 
 const mimeTypes = ["image/png", "image/gif", "image/jpeg", "image/jpg"];
 

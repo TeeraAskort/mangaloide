@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { db } from "../../../../database";
-import { UserModel } from "../../../../models";
+import { db } from "../../../../../database";
+import { UserModel } from "../../../../../models";
 import fs, { ReadStream, StatsBase } from "fs";
 
 type Data =

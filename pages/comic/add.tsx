@@ -15,19 +15,10 @@ import {
   Select,
   SelectChangeEvent,
   TextField,
-  Typography,
 } from "@mui/material";
-import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import React, {
-  ChangeEvent,
-  SyntheticEvent,
-  useContext,
-  useEffect,
-  useState,
-} from "react";
+import React, { ChangeEvent, SyntheticEvent, useState } from "react";
 import { comicsApi } from "../../apis";
-import { AuthContext } from "../../context/auth";
 import { Comic, Tag } from "../../interfaces";
 import { MainLayout } from "../../layouts";
 
@@ -112,8 +103,6 @@ const AddComicPage = () => {
         });
 
         bodyFormData.append("tags", tagRes);
-
-        console.log(bodyFormData);
 
         const comic = await comicsApi.post<Comic>("/comic", bodyFormData, {
           headers: {
