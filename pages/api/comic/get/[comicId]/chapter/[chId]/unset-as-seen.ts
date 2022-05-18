@@ -52,7 +52,7 @@ const setAsSeen = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(404).json({ message: "Comic not being followed" });
   }
 
-  const chIndex = user.comicsFollowing[comicIndex].chaptersRead.findIndex(
+  const chIndex = user.comicsFollowing[comicIndex].chaptersRead!.findIndex(
     (chapter) => chapter._id.toString() === chId
   );
 
@@ -60,7 +60,7 @@ const setAsSeen = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(404).json({ message: "Chapter not seen" });
   }
 
-  user.comicsFollowing[comicIndex].chaptersRead.splice(chIndex, 1);
+  user.comicsFollowing[comicIndex].chaptersRead!.splice(chIndex, 1);
 
   await user.save();
 

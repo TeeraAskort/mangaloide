@@ -16,11 +16,16 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
+import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import React, { ChangeEvent, SyntheticEvent, useState } from "react";
 import { comicsApi } from "../../apis";
 import { Comic, Tag } from "../../interfaces";
 import { MainLayout } from "../../layouts";
+
+interface SendResponse {
+  message: string;
+}
 
 const AddComicPage = () => {
   const router = useRouter();
@@ -113,9 +118,12 @@ const AddComicPage = () => {
         if (comic) {
           router.push("/");
         }
-      } catch (error: any) {
+      } catch (error) {
         console.log(error);
-        setError(error.response.message);
+        if (axios.isAxiosError(error)) {
+          const err = error as AxiosError<SendResponse>;
+          setError(error.response?.data.message);
+        }
       }
     } else {
       setError("You have to enter all data");

@@ -51,7 +51,7 @@ const setAsSeen = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   }
 
   const chapter = comic.chapters.find(
-    (chapter) => chapter._id.toString() === chId
+    (chapter) => chapter._id!.toString() === chId
   );
 
   if (!chapter) {
@@ -71,7 +71,7 @@ const setAsSeen = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     index = user.comicsFollowing.length - 1;
   }
 
-  const chIndex = user.comicsFollowing[index].chaptersRead.findIndex(
+  const chIndex = user.comicsFollowing[index].chaptersRead!.findIndex(
     (chRead) => chRead._id === chapter._id
   );
 
@@ -79,8 +79,8 @@ const setAsSeen = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(400).json({ message: "Chapter already followed" });
   }
 
-  user.comicsFollowing[index].chaptersRead.push({
-    _id: chapter._id.toString(),
+  user.comicsFollowing[index].chaptersRead!.push({
+    _id: chapter._id!.toString(),
     language: chapter.language,
     name: chapter.name,
   });
