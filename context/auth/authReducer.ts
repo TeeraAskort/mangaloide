@@ -8,6 +8,10 @@ type AuthActionType =
     }
   | {
       type: "[Auth] - Logout";
+    }
+  | {
+      type: "[Auth] - Update user";
+      payload: IUser;
     };
 
 export const authReducer = (
@@ -28,6 +32,12 @@ export const authReducer = (
         isLoggedIn: false,
         user: undefined,
       };
+
+      case "[Auth] - Update user":
+        return {
+          ...state,
+          user: action.payload
+        }
 
     default:
       return state;

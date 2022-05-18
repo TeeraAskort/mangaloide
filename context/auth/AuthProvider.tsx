@@ -96,8 +96,14 @@ export const AuthProvider: FC<Props> = ({ children }) => {
     dispatch({ type: "[Auth] - Logout" });
   };
 
+  const updateUser = (user: IUser) => {
+    dispatch({ type: "[Auth] - Update user", payload: user });
+  };
+
   return (
-    <AuthContext.Provider value={{ ...state, loginUser, registerUser, logout }}>
+    <AuthContext.Provider
+      value={{ ...state, loginUser, registerUser, logout, updateUser }}
+    >
       {children}
     </AuthContext.Provider>
   );

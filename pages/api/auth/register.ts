@@ -3,6 +3,7 @@ import bcrypt from "bcryptjs";
 import { db } from "../../../database";
 import { UserModel } from "../../../models";
 import { isValidEmail, JWT } from "../../../utils";
+import { ComicMin } from "../../../interfaces";
 
 type Data =
   | {
@@ -14,6 +15,7 @@ type Data =
         email: string;
         username: string;
         role: string;
+        comicsFollowing: ComicMin[];
       };
     };
 
@@ -90,6 +92,7 @@ const register = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       email,
       role,
       username,
+      comicsFollowing: [],
     },
   });
 };

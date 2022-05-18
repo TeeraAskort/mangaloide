@@ -4,6 +4,7 @@ import { db } from "../../../database";
 import { UserModel } from "../../../models";
 import { JWT } from "../../../utils";
 import { IUser } from "../../../models/User";
+import { ComicMin } from "../../../interfaces";
 
 type Data =
   | {
@@ -15,6 +16,7 @@ type Data =
         email: string;
         role: string;
         username: string;
+        comicsFollowing: ComicMin[];
       };
     };
 
@@ -45,7 +47,7 @@ const login = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
     return res.status(400).json({ message: "Invalid email or password" });
   }
 
-  const { role, username, _id } = user;
+  const { role, username, _id, comicsFollowing } = user;
 
   const token = JWT.signToken(_id.toString(), email);
 
@@ -55,6 +57,7 @@ const login = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       email,
       role,
       username,
+      comicsFollowing,
     },
   });
 };

@@ -1,10 +1,11 @@
 import { IComic } from "./../../../models/Comic";
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
-import { ComicModel } from "../../../models";
+import { ComicModel, UserModel } from "../../../models";
 import formidable from "formidable";
 import fs from "fs";
 import Jimp from "jimp";
+import { JWT } from "../../../utils";
 
 const mimeTypes = ["image/png", "image/gif", "image/jpeg", "image/jpg"];
 
@@ -75,6 +76,14 @@ const postComic = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       try {
         await db.connect();
 
+        const { token } = req.cookies;
+        const userId = await JWT.isValidToken(token);
+        const user = await UserModel.findById(userId);
+
+        if (!user) {
+          return res.status(404).json({ message: "User not found" });
+        }
+
         const comic = await ComicModel.find({ name });
 
         if (comic.length !== 0) {
@@ -129,6 +138,13 @@ const postComic = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         });
 
         await newComic.save();
+
+        user.uploadedComics.push({
+          _id: newComic._id,
+          name: newComic.name,
+        });
+
+        await user.save();
 
         return res.status(201).json(newComic);
       } catch (error) {

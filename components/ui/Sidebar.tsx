@@ -31,10 +31,13 @@ export const Sidebar = () => {
 
   const doLogout = () => {
     logout();
-    console.log(router.asPath);
+
+    closeSideMenu();
 
     if (router.pathname.includes("/user/profile")) {
       router.push("/");
+    } else {
+      router.reload();
     }
   };
 

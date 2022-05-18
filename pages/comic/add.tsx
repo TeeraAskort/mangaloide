@@ -115,7 +115,7 @@ const AddComicPage = () => {
         }
       } catch (error: any) {
         console.log(error);
-        setError(error.error.message);
+        setError(error.response.message);
       }
     } else {
       setError("You have to enter all data");

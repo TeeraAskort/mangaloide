@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { db } from "../../../database";
+import { ComicMin } from "../../../interfaces";
 import { UserModel } from "../../../models";
 import { JWT } from "../../../utils";
 
@@ -13,6 +14,7 @@ type Data =
         email: string;
         username: string;
         role: string;
+        comicsFollowing: ComicMin[];
       };
     };
 
@@ -50,7 +52,7 @@ const validateToken = async (
     return res.status(404).json({ message: "User doesn't exist" });
   }
 
-  const { _id, email, role, username } = user;
+  const { _id, email, role, username, comicsFollowing } = user;
 
   return res.status(200).json({
     token: JWT.signToken(_id.toString(), email), // jwt
@@ -58,6 +60,7 @@ const validateToken = async (
       email,
       role,
       username,
+      comicsFollowing,
     },
   });
 };

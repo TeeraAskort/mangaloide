@@ -61,6 +61,15 @@ const Home: NextPage<Props> = ({ newComics, loggedIn }) => {
     }
   };
 
+  const clearFilter = async () => {
+    setSelectedTag("");
+    setSearchText("");
+
+    const { data } = await comicsApi.post<IComic[]>("/comic/search");
+
+    setDisplayComics([...data]);
+  };
+
   return (
     <MainLayout title="Mangaloide - Home">
       <Grid container justifyContent="center" spacing={2}>
@@ -90,7 +99,14 @@ const Home: NextPage<Props> = ({ newComics, loggedIn }) => {
             </Select>
           </FormControl>
 
-          <Button onClick={filter}>Filter</Button>
+          <Grid container spacing={2} justifyContent="space-between">
+            <Grid item xs={4}>
+              <Button onClick={filter}>Filter</Button>
+            </Grid>
+            <Grid item xs={4}>
+              <Button onClick={clearFilter}>Clear</Button>
+            </Grid>
+          </Grid>
         </Grid>
         <ComicList comics={displayComics} />
       </Grid>
