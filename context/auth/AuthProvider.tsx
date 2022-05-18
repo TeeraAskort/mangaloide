@@ -92,6 +92,7 @@ export const AuthProvider: FC<Props> = ({ children }) => {
   };
 
   const logout = () => {
+    Cookies.remove("token");
     dispatch({ type: "[Auth] - Logout" });
   };
 

@@ -29,6 +29,15 @@ export const Sidebar = () => {
     closeSideMenu();
   };
 
+  const doLogout = () => {
+    logout();
+    console.log(router.asPath);
+
+    if (router.pathname.includes("/user/profile")) {
+      router.push("/");
+    }
+  };
+
   return (
     <Drawer anchor="left" open={sidemenuOpen} onClose={closeSideMenu}>
       <Box sx={{ width: 250 }}>
@@ -47,7 +56,7 @@ export const Sidebar = () => {
             ""
           )}
           {isLoggedIn ? (
-            <ListItem button onClick={logout}>
+            <ListItem button onClick={doLogout}>
               <ListItemIcon>
                 <LogoutIcon />
               </ListItemIcon>
