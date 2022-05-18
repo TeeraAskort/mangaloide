@@ -13,16 +13,25 @@ import {
   FormControl,
 } from "@mui/material";
 import { useRouter } from "next/router";
-import { ChangeEvent } from "react";
+import { ChangeEvent, useContext, useEffect } from "react";
 import { useState } from "react";
 import { MainLayout } from "../../../../layouts";
 import { comicsApi } from "../../../../apis";
 import { Comic } from "../../../../interfaces";
+import { AuthContext } from "../../../../context/auth";
 
 const languages = ["EN", "ES", "CAT", "VA"];
 
 const AddChapter = () => {
   const router = useRouter();
+
+  const { isLoggedIn } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push("/auth/login");
+    }
+  });
 
   const [name, setName] = useState("");
   const [chNumber, setChNumber] = useState("");

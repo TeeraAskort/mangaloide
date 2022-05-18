@@ -12,7 +12,6 @@ Chapters uploaded to the server will be decompressed and then, the images will b
 - `yarn install`
 - `docker-compose up -d`
 - `mkdir comics tmp`
-- `chmod 777 -R comics tmp`
+- `chmod 777 -R comics tmp userimages`
 - `cp .env.template .env`
 - `yarn dev`
-

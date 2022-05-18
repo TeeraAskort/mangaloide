@@ -19,13 +19,28 @@ import {
 } from "@mui/material";
 import Cookies from "js-cookie";
 import { useRouter } from "next/router";
-import React, { ChangeEvent, SyntheticEvent, useState } from "react";
+import React, {
+  ChangeEvent,
+  SyntheticEvent,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
 import { comicsApi } from "../../apis";
+import { AuthContext } from "../../context/auth";
 import { Comic, Tag } from "../../interfaces";
 import { MainLayout } from "../../layouts";
 
 const AddComicPage = () => {
   const router = useRouter();
+
+  const { isLoggedIn } = useContext(AuthContext);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      router.push("/auth/login");
+    }
+  });
 
   const [name, setName] = useState("");
   const [author, setAuthor] = useState("");

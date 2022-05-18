@@ -15,25 +15,18 @@ import LogoutIcon from "@mui/icons-material/Logout";
 import HowToRegIcon from "@mui/icons-material/HowToReg";
 import HomeIcon from "@mui/icons-material/Home";
 import { useRouter } from "next/router";
+import { AuthContext } from "../../context/auth";
 
 export const Sidebar = () => {
   const { sidemenuOpen, closeSideMenu } = useContext(UIContext);
 
+  const { logout, isLoggedIn } = useContext(AuthContext);
+
   const router = useRouter();
 
-  const goHome = () => {
+  const go = (place: string) => {
+    router.push(place);
     closeSideMenu();
-    router.push("/");
-  };
-
-  const goLogin = () => {
-    closeSideMenu();
-    router.push("/auth/login");
-  };
-
-  const goRegister = () => {
-    closeSideMenu();
-    router.push("/auth/register");
   };
 
   return (
@@ -43,28 +36,40 @@ export const Sidebar = () => {
           <Typography variant="h4">Menu</Typography>
         </Box>
         <List>
-          <ListItem button onClick={goLogin}>
-            <ListItemIcon>
-              <LoginIcon />
-            </ListItemIcon>
-            <ListItemText primary="Log in" />
-          </ListItem>
-          <ListItem button>
-            <ListItemIcon>
-              <LogoutIcon />
-            </ListItemIcon>
-            <ListItemText primary="Log out" />
-          </ListItem>
-          <ListItem button onClick={goRegister}>
-            <ListItemIcon>
-              <HowToRegIcon />
-            </ListItemIcon>
-            <ListItemText primary="Register" />
-          </ListItem>
+          {!isLoggedIn ? (
+            <ListItem button onClick={() => go("/auth/login")}>
+              <ListItemIcon>
+                <LoginIcon />
+              </ListItemIcon>
+              <ListItemText primary="Log in" />
+            </ListItem>
+          ) : (
+            ""
+          )}
+          {isLoggedIn ? (
+            <ListItem button onClick={logout}>
+              <ListItemIcon>
+                <LogoutIcon />
+              </ListItemIcon>
+              <ListItemText primary="Log out" />
+            </ListItem>
+          ) : (
+            ""
+          )}
+          {!isLoggedIn ? (
+            <ListItem button onClick={() => go("/auth/register")}>
+              <ListItemIcon>
+                <HowToRegIcon />
+              </ListItemIcon>
+              <ListItemText primary="Register" />
+            </ListItem>
+          ) : (
+            ""
+          )}
         </List>
         <Divider />
         <List>
-          <ListItem button onClick={goHome}>
+          <ListItem button onClick={() => go("/")}>
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>

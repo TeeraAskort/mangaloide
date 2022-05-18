@@ -19,17 +19,20 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
-import { ComicModel } from "../models";
+import { ComicModel, UserModel } from "../models";
 import { db } from "../database";
 import { ChangeEvent, useState } from "react";
 import { comicsApi } from "../apis";
 import { IComic } from "../models/Comic";
+import { JWT } from "../utils";
+import { ComicList } from "../components";
 
 interface Props {
   newComics: Comic[];
+  loggedIn: boolean;
 }
 
-const Home: NextPage<Props> = ({ newComics }) => {
+const Home: NextPage<Props> = ({ newComics, loggedIn }) => {
   const router = useRouter();
 
   const [displayComics, setDisplayComics] = useState([...newComics]);
@@ -56,10 +59,6 @@ const Home: NextPage<Props> = ({ newComics }) => {
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const goToComicAdd = () => {
-    router.push("/comic/add");
   };
 
   return (
@@ -93,48 +92,25 @@ const Home: NextPage<Props> = ({ newComics }) => {
 
           <Button onClick={filter}>Filter</Button>
         </Grid>
-        <Grid item xs={12} md={8} lg={10}>
-          {displayComics.length !== 0 ? (
-            <Grid container justifyContent="center" spacing={2}>
-              {displayComics.map((comic) => (
-                <Grid item xs={12} sm={6} md={4} xl={2} key={comic._id}>
-                  <Card sx={{ border: comic.nsfw ? "1px solid red" : "" }}>
-                    <CardActionArea href={`/comic/${comic._id}`}>
-                      <CardMedia
-                        component={"img"}
-                        image={`/api/comic/get/${comic._id}/image`}
-                        alt={comic.name}
-                      />
-                      <CardHeader title={comic.name} />
-                    </CardActionArea>
-                  </Card>
-                </Grid>
-              ))}
-            </Grid>
-          ) : (
-            <Grid container justifyContent="center" spacing={2}>
-              <Grid item xs={12} sm={6} md={4} xl={2}>
-                <Card>
-                  <CardHeader title="There are no comics" />
-                </Card>
-              </Grid>
-            </Grid>
-          )}
-        </Grid>
+        <ComicList comics={displayComics} />
       </Grid>
 
-      <Fab
-        onClick={goToComicAdd}
-        color="primary"
-        aria-label="add"
-        sx={{
-          position: "fixed",
-          bottom: darkTheme.spacing(2),
-          right: darkTheme.spacing(2),
-        }}
-      >
-        <AddIcon />
-      </Fab>
+      {loggedIn ? (
+        <Fab
+          color="primary"
+          aria-label="add"
+          sx={{
+            position: "fixed",
+            bottom: darkTheme.spacing(2),
+            right: darkTheme.spacing(2),
+          }}
+          href="/comic/add"
+        >
+          <AddIcon />
+        </Fab>
+      ) : (
+        ""
+      )}
     </MainLayout>
   );
 };
@@ -142,7 +118,19 @@ const Home: NextPage<Props> = ({ newComics }) => {
 export async function getServerSideProps(context: GetServerSidePropsContext) {
   await db.connect();
 
-  const { nsfw } = context.req.cookies;
+  const { nsfw, token } = context.req.cookies;
+
+  let loggedIn = false;
+
+  try {
+    const userId = await JWT.isValidToken(token);
+    const user = await UserModel.findById(userId).select("_id").lean();
+    if (user) {
+      loggedIn = true;
+    }
+  } catch (error) {
+    console.log(error);
+  }
 
   let comics: Comic[];
 
@@ -155,6 +143,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
   return {
     props: {
       newComics: JSON.parse(JSON.stringify(comics)),
+      loggedIn,
     },
   };
 }
