@@ -59,7 +59,7 @@ const setAsSeen = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   }
 
   let index = user.comicsFollowing.findIndex(
-    (followed) => followed._id === comic._id
+    (followed) => followed._id.toString() === comic._id.toString()
   );
 
   if (index === -1) {
@@ -72,7 +72,7 @@ const setAsSeen = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   }
 
   const chIndex = user.comicsFollowing[index].chaptersRead!.findIndex(
-    (chRead) => chRead._id === chapter._id
+    (chRead) => chRead._id.toString() === chapter._id!.toString()
   );
 
   if (chIndex !== -1) {

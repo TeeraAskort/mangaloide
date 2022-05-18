@@ -32,7 +32,7 @@ export const Navbar: FC = () => {
     setTimeout(() => {
       setStrip(Cookies.get("strip") === "true");
     }, 200);
-  });
+  }, []);
 
   const onChangeNSFW = (event: ChangeEvent, checked: boolean) => {
     setShowNSFW(checked);

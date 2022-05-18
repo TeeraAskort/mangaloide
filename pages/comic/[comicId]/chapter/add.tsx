@@ -12,6 +12,7 @@ import {
   InputLabel,
   FormControl,
 } from "@mui/material";
+import { GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import { ChangeEvent, useContext, useEffect } from "react";
 import { useState } from "react";
@@ -19,6 +20,7 @@ import { MainLayout } from "../../../../layouts";
 import { comicsApi } from "../../../../apis";
 import { Comic } from "../../../../interfaces";
 import { AuthContext } from "../../../../context/auth";
+import { JWT } from "../../../../utils";
 
 const languages = ["EN", "ES", "CAT", "VA"];
 
@@ -148,6 +150,25 @@ const AddChapter = () => {
       </Grid>
     </MainLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { token } = ctx.req.cookies;
+
+  try {
+    await JWT.isValidToken(token);
+  } catch (error) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
 };
 
 export default AddChapter;

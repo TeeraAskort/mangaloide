@@ -7,6 +7,7 @@ import { IComic } from "../../../../../../models/Comic";
 import AdmZip from "adm-zip";
 import fs from "fs";
 import mime from "mime-types";
+import { JWT } from "../../../../../../utils";
 
 type Data =
   | {
@@ -37,9 +38,15 @@ export default function handler(
 }
 
 const postChapter = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
-  console.log("start");
-
   try {
+    const { token } = req.cookies;
+
+    try {
+      await JWT.isValidToken(token);
+    } catch (error) {
+      return res.status(401).json({ message: "You have to be logged in" });
+    }
+
     const form = formidable({ multiples: true });
 
     form.parse(req, async (err, fields, files: any) => {
@@ -48,8 +55,6 @@ const postChapter = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         return res.status(500).json({ message: "Backend error" });
       }
 
-      console.log("entered");
-
       const { name, chNumber, language } = fields;
 
       if (name && chNumber && language && files.file[0]) {
@@ -57,7 +62,6 @@ const postChapter = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
           if (!files.file[0].mimetype.includes("application/zip")) {
             return res.status(400).json({ message: "File type not supported" });
           }
-          console.log("Mime checked");
           const { comicId } = req.query;
 
           await db.connect();
@@ -80,12 +84,18 @@ const postChapter = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
           }
           fs.mkdirSync(destPath);
 
-          console.log(zipTmpPath);
-
           fs.copyFileSync(files.file[0].filepath, zipTmpPath);
           await unzipFile(zipTmpPath, tmpPath);
 
           let filesPath = await walk(tmpPath, destPath, []);
+
+          if (filesPath.length === 0) {
+            return res
+              .status(400)
+              .json({
+                message: "The provided .zip doesn't have any usable images",
+              });
+          }
 
           filesPath.forEach((file, index) => {
             Jimp.read(file).then((image) =>

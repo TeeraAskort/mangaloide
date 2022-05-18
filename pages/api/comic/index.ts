@@ -77,7 +77,12 @@ const postComic = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         await db.connect();
 
         const { token } = req.cookies;
-        const userId = await JWT.isValidToken(token);
+        let userId;
+        try {
+          userId = await JWT.isValidToken(token);
+        } catch (error) {
+          return res.status(401).json({ message: "You have to be logged in" });
+        }
         const user = await UserModel.findById(userId);
 
         if (!user) {

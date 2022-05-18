@@ -16,12 +16,14 @@ import {
   SelectChangeEvent,
   TextField,
 } from "@mui/material";
+import { GetServerSideProps } from "next";
 import axios, { AxiosError } from "axios";
 import { useRouter } from "next/router";
 import React, { ChangeEvent, SyntheticEvent, useState } from "react";
 import { comicsApi } from "../../apis";
 import { Comic, Tag } from "../../interfaces";
 import { MainLayout } from "../../layouts";
+import { JWT } from "../../utils";
 
 interface SendResponse {
   message: string;
@@ -224,6 +226,25 @@ const AddComicPage = () => {
       </Grid>
     </MainLayout>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const { token } = ctx.req.cookies;
+
+  try {
+    await JWT.isValidToken(token);
+  } catch (error) {
+    return {
+      redirect: {
+        destination: "/auth/login",
+        permanent: false,
+      },
+    };
+  }
+
+  return {
+    props: {},
+  };
 };
 
 export default AddComicPage;

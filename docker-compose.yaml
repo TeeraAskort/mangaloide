@@ -7,6 +7,7 @@ services:
     volumes:
       - ./mongo:/data/db
   mangaloide:
+    container_name: mangaloideapp
     build:
       context: ./
       dockerfile: Dockerfile
@@ -18,4 +19,8 @@ services:
       - COMICS_PATH=./comics
       - TMP_PATH=./tmp
       - USERIMG_PATH=./userimages
-      - JWT_SECRET_SEED=prova
+      - JWT_SECRET_SEED=SuperSecretKey # Change it
+    volumes:
+      - ./comics:/app/comics
+      - ./tmp:/app/tmp
+      - ./userimages:/app/userimages

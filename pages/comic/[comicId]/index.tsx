@@ -55,8 +55,7 @@ const ComicDetailPage: FC<Props> = ({ comic, isLoggedIn }) => {
 
   const goToChapter = (comicId: string, chapterId: string) => {
     if (Cookies.get("strip")) {
-      const strip = Boolean(Cookies.get("strip"));
-      if (strip) {
+      if (Cookies.get("strip") === "true") {
         router.push(`/comic/${comicId}/chapter/${chapterId}`);
       } else {
         router.push(`/comic/${comicId}/chapter/${chapterId}/page/1`);
