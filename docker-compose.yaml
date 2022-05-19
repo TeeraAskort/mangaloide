@@ -14,12 +14,8 @@ services:
     image: mangaloide
     ports:
       - "80:3000"
-    environment:
-      - MONGO_URL=mongodb://mangaloidedb:27017/mangaloidedb
-      - COMICS_PATH=./comics
-      - TMP_PATH=./tmp
-      - USERIMG_PATH=./userimages
-      - JWT_SECRET_SEED=SuperSecretKey # Change it
+    env_file:
+      - .env
     volumes:
       - ./comics:/app/comics
       - ./tmp:/app/tmp

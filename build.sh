@@ -12,7 +12,7 @@ sudo rm -r comics tmp
 
 cd $directory/userimages
 
-ls | grep -v default.jpg | xargs rm -r
+ls | grep -v default.jpg | sudo xargs rm -r
 
 cd $directory
 
@@ -21,3 +21,5 @@ mkdir comics tmp
 chmod -R 777 tmp comics userimages
 
 docker-compose up -d --build
+
+docker image prune -f
