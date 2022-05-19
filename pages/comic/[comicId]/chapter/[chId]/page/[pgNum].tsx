@@ -72,7 +72,7 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   await db.connect();
 
-  const comic = await ComicModel.findById(comicId);
+  const comic = await ComicModel.findById(comicId).select("chapters").lean();
 
   if (!comic) {
     return {
@@ -83,9 +83,9 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
     };
   }
 
-  const chapter = comic.chapters.filter(
-    (chapter) => chapter._id?.toString() === chId
-  )[0];
+  const chapter = comic.chapters.find(
+    (chapter) => chapter._id!.toString() === chId
+  );
 
   if (!chapter) {
     return {

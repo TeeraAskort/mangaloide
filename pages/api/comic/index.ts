@@ -95,6 +95,16 @@ const postComic = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
           return res.status(400).json({ message: "Comic already exists" });
         }
 
+        const newComic = new ComicModel({
+          name: name[0],
+          description: description[0],
+          author: author[0],
+          nsfw: nsfw[0] === "true" ? true : false,
+          tags: tags[0].split(","),
+        });
+
+        await newComic.save();
+
         // Copy the image to the tmp folder
         fs.copyFileSync(
           files.file[0].filepath,
@@ -102,7 +112,7 @@ const postComic = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         );
 
         // Declare the path for the new comic folder
-        const comicPath = `${process.env.COMICS_PATH}/${name}`;
+        const comicPath = `${process.env.COMICS_PATH}/${newComic._id}`;
 
         // If it doesn't exist create it
         if (!fs.existsSync(comicPath)) {
@@ -131,18 +141,6 @@ const postComic = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             message: "You need to add tags to the comic",
           });
         }
-
-        console.log(tags);
-
-        const newComic = new ComicModel({
-          name: name[0],
-          description: description[0],
-          author: author[0],
-          nsfw: nsfw[0] === "true" ? true : false,
-          tags: tags[0].split(","),
-        });
-
-        await newComic.save();
 
         user.uploadedComics.push({
           _id: newComic._id,

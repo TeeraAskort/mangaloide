@@ -35,7 +35,7 @@ const getImage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       return res.status(404).json({ message: "Comic not found" });
     }
 
-    const imagePath = `${process.env.COMICS_PATH}/${comic?.name}/image.jpg`;
+    const imagePath = `${process.env.COMICS_PATH}/${comic!._id}/image.jpg`;
 
     const stat = fs.statSync(imagePath);
 

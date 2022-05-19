@@ -42,7 +42,7 @@ const getPage = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
       return res.status(404).json({ message: "Chapter not found" });
     }
 
-    const imagePath = `${process.env.COMICS_PATH}/${comic.name}/${chapter.chNumber}-${chapter.language}/${pgNum}.jpg`;
+    const imagePath = `${process.env.COMICS_PATH}/${comic._id}/${chapter.chNumber}-${chapter.language}/${pgNum}.jpg`;
 
     const stat = fs.statSync(imagePath);
 

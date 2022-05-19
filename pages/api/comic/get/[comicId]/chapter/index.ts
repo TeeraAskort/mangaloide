@@ -72,13 +72,13 @@ const postChapter = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             return res.status(404).json({ message: "Comic not found" });
           }
 
-          const tmpPath = `${process.env.TMP_PATH}/${comic.name}-${chNumber}`;
+          const tmpPath = `${process.env.TMP_PATH}/${comic._id}-${chNumber}`;
           if (!fs.existsSync(tmpPath)) {
             fs.mkdirSync(tmpPath);
           }
           const zipTmpPath = `${process.env.TMP_PATH}/${files.file[0].originalFilename}`;
 
-          const destPath = `${process.env.COMICS_PATH}/${comic.name}/${chNumber}-${language}`;
+          const destPath = `${process.env.COMICS_PATH}/${comic._id}/${chNumber}-${language}`;
           if (fs.existsSync(destPath)) {
             return res.status(400).json({ message: "Chapter already exists" });
           }
@@ -90,11 +90,9 @@ const postChapter = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
           let filesPath = await walk(tmpPath, destPath, []);
 
           if (filesPath.length === 0) {
-            return res
-              .status(400)
-              .json({
-                message: "The provided .zip doesn't have any usable images",
-              });
+            return res.status(400).json({
+              message: "The provided .zip doesn't have any usable images",
+            });
           }
 
           filesPath.forEach((file, index) => {
