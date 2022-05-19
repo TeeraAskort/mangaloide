@@ -1,4 +1,5 @@
 import {
+  Button,
   Card,
   CardContent,
   CardHeader,
@@ -43,10 +44,15 @@ const ComicDetailPage: FC<Props> = ({ comic, isLoggedIn }) => {
   const { user, updateUser } = useContext(AuthContext);
 
   let chapters: ChapterMin[] = [];
+  let following: boolean = false;
   if (user) {
     chapters =
       user.comicsFollowing.find((following) => following._id === comic._id)
         ?.chaptersRead || [];
+    following =
+      user.comicsFollowing.find(
+        (following) => following._id.toString() === comic._id.toString()
+      ) !== undefined;
   }
 
   const goToChapterAdd = () => {
@@ -87,6 +93,32 @@ const ComicDetailPage: FC<Props> = ({ comic, isLoggedIn }) => {
     }
   };
 
+  const follow = async () => {
+    if (!user) return;
+
+    if (
+      user.comicsFollowing.find(
+        (following) => following._id.toString() === comic._id.toString()
+      )
+    ) {
+      const { data } = await comicsApi.get<SetAsSeenResponse>(
+        `/comic/get/${comic._id}/unfollow`
+      );
+      if (data.comicsFollowing) {
+        user.comicsFollowing = data.comicsFollowing;
+        updateUser(user);
+      }
+    } else {
+      const { data } = await comicsApi.get<SetAsSeenResponse>(
+        `/comic/get/${comic._id}/follow`
+      );
+      if (data.comicsFollowing) {
+        user.comicsFollowing = data.comicsFollowing;
+        updateUser(user);
+      }
+    }
+  };
+
   return (
     <MainLayout title={comic.name}>
       <Grid container spacing={2} justifyContent="space-around">
@@ -103,6 +135,31 @@ const ComicDetailPage: FC<Props> = ({ comic, isLoggedIn }) => {
               <Typography variant="body1" sx={{ marginY: 2 }}>
                 Sinopsis: <br /> {comic.description}
               </Typography>
+              {isLoggedIn ? (
+                <Grid container spacing={2} justifyContent="start">
+                  <Grid item xs={6} sm={4}>
+                    {following ? (
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={follow}
+                      >
+                        Unfollow comic
+                      </Button>
+                    ) : (
+                      <Button
+                        color="primary"
+                        variant="contained"
+                        onClick={follow}
+                      >
+                        Follow comic
+                      </Button>
+                    )}
+                  </Grid>
+                </Grid>
+              ) : (
+                ""
+              )}
             </CardContent>
           </Card>
           <Card sx={{ marginY: 3 }}>

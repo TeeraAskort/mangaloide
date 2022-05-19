@@ -138,22 +138,32 @@ export async function getServerSideProps(context: GetServerSidePropsContext) {
 
   let loggedIn = false;
 
-  try {
-    const userId = await JWT.isValidToken(token);
-    const user = await UserModel.findById(userId).select("_id").lean();
-    if (user) {
-      loggedIn = true;
+  if (token) {
+    try {
+      const userId = await JWT.isValidToken(token);
+      const user = await UserModel.findById(userId).select("_id").lean();
+      if (user) {
+        loggedIn = true;
+      }
+    } catch (error) {
+      console.log(error);
     }
-  } catch (error) {
-    console.log(error);
   }
 
   let comics: Comic[];
 
   if (nsfw && nsfw === "true") {
-    comics = await ComicModel.find().sort("-date").limit(20);
+    comics = await ComicModel.find()
+      .sort("-date")
+      .limit(20)
+      .select("_id name nsfw")
+      .lean();
   } else {
-    comics = await ComicModel.find({ nsfw: false }).sort("-date").limit(20);
+    comics = await ComicModel.find({ nsfw: false })
+      .sort("-date")
+      .limit(20)
+      .select("_id name nsfw")
+      .lean();
   }
 
   return {

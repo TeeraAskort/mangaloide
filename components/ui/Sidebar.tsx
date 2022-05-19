@@ -16,6 +16,7 @@ import HowToRegIcon from "@mui/icons-material/HowToReg";
 import HomeIcon from "@mui/icons-material/Home";
 import { useRouter } from "next/router";
 import { AuthContext } from "../../context/auth";
+import { Bookmark, Person } from "@mui/icons-material";
 
 export const Sidebar = () => {
   const { sidemenuOpen, closeSideMenu } = useContext(UIContext);
@@ -59,6 +60,16 @@ export const Sidebar = () => {
             ""
           )}
           {isLoggedIn ? (
+            <ListItem button onClick={() => go("/user/profile")}>
+              <ListItemIcon>
+                <Person />
+              </ListItemIcon>
+              <ListItemText primary="Account settings" />
+            </ListItem>
+          ) : (
+            ""
+          )}
+          {isLoggedIn ? (
             <ListItem button onClick={doLogout}>
               <ListItemIcon>
                 <LogoutIcon />
@@ -87,6 +98,16 @@ export const Sidebar = () => {
             </ListItemIcon>
             <ListItemText primary="Home" />
           </ListItem>
+          {isLoggedIn ? (
+            <ListItem button onClick={() => go("/comic/following")}>
+              <ListItemIcon>
+                <Bookmark />
+              </ListItemIcon>
+              <ListItemText primary="Following" />
+            </ListItem>
+          ) : (
+            ""
+          )}
         </List>
       </Box>
     </Drawer>
