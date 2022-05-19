@@ -2,6 +2,7 @@ services:
   mangaloidedb:
     image: mongo:latest
     container_name: mangaloidedb
+    restart: always
     ports:
       - 27017:27017
     volumes:

@@ -2,6 +2,7 @@ services:
   mangaloidedb:
     image: mongo:latest
     container_name: mangaloidedb
+    restart: always
     ports:
       - 27017:27017
     volumes:
@@ -12,6 +13,7 @@ services:
       context: ../../
       dockerfile: ./docker/prod/Dockerfile
     image: mangaloide
+    restart: always
     ports:
       - "80:3000"
     volumes:
