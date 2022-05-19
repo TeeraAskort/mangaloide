@@ -37,7 +37,7 @@ yarn-error.log*
 # Custom paths
 /comics
 /tmp
-.env
+/.env
 /mongo
 /userimages/*
 !/userimages/default.jpg
