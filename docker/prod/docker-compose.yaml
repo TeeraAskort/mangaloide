@@ -5,18 +5,16 @@ services:
     ports:
       - 27017:27017
     volumes:
-      - ./mongo:/data/db
+      - ../../mongo:/data/db
   mangaloide:
     container_name: mangaloideapp
     build:
-      context: ./
-      dockerfile: Dockerfile
+      context: ../../
+      dockerfile: ./docker/prod/Dockerfile
     image: mangaloide
     ports:
       - "80:3000"
-    env_file:
-      - .env
     volumes:
-      - ./comics:/app/comics
-      - ./tmp:/app/tmp
-      - ./userimages:/app/userimages
+      - ../../comics:/app/comics
+      - ../../tmp:/app/tmp
+      - ../../userimages:/app/userimages
