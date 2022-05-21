@@ -54,13 +54,13 @@ const register = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
   }
 
   await db.connect();
-  let user = await UserModel.findOne({ email }).lean();
+  let user = await UserModel.findOne({ email }).select("_id").lean();
 
   if (user) {
     return res.status(400).json({ message: "The email is already in use" });
   }
 
-  user = await UserModel.findOne({ username }).lean();
+  user = await UserModel.findOne({ username }).select("_id").lean();
 
   if (user) {
     return res.status(400).json({ message: "Username already taken" });
