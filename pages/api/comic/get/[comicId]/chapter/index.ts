@@ -95,10 +95,9 @@ const postChapter = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             });
           }
 
-          filesPath.forEach((file, index) => {
-            Jimp.read(file).then((image) =>
-              image.quality(90).write(`${destPath}/${index + 1}.jpg`)
-            );
+          filesPath.forEach(async (file, index) => {
+            const image = await Jimp.read(file);
+            image.quality(90).write(`${destPath}/${index + 1}.jpg`);
           });
 
           fs.rmSync(tmpPath, { recursive: true, force: true });

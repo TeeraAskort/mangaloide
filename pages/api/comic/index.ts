@@ -120,16 +120,14 @@ const postComic = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
         }
 
         // Convert the image to jpeg and resize it with Jimp
-        Jimp.read(`${process.env.TMP_PATH}/${files.file[0].originalFilename}`)
-          .then((image) => {
-            return image
-              .quality(80)
-              .resize(366, 512)
-              .write(`${comicPath}/image.jpg`);
-          })
-          .catch((err) => {
-            console.log(err);
-          });
+        const image = await Jimp.read(
+          `${process.env.TMP_PATH}/${files.file[0].originalFilename}`
+        );
+        try {
+          image.quality(80).resize(366, 512).write(`${comicPath}/image.jpg`);
+        } catch (error) {
+          return res.status(500).json({ message: "Backend error" });
+        }
 
         // Delete temporary image
         fs.unlinkSync(
