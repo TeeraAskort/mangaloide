@@ -31,8 +31,12 @@ if [ "$1" == "prod" ]; then
 
     cp .env $directory
 
-    docker-compose up -d --build
-
+    if [ "$2" == "ssl" ]; then
+	docker-compose up -f docker-compose-ssl.yaml -d --build
+    else
+	docker-compose up -f docker-compose.yaml -d --build
+    fi
+    
     docker image prune -f
 
     docker container prune -f

@@ -1,0 +1,33 @@
+services:
+  mangaloidedb:
+    image: mongo:latest
+    container_name: mangaloidedb
+    restart: always
+    ports:
+      - 27017:27017
+    volumes:
+      - ../../mongo:/data/db
+  mangaloide:
+    container_name: mangaloideapp
+    build:
+      context: ../../
+      dockerfile: ./docker/prod/Dockerfile
+    image: mangaloide
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../../comics:/app/comics
+      - ../../tmp:/app/tmp
+      - ../../userimages:/app/userimages
+  nginx-ssl-proxy:
+    image: danieldent/nginx-ssl-proxy
+    restart: always
+    environment:
+      UPSTREAM: 127.0.0.1:3000
+      SERVERNAME: mangaloide.alderaeney.xyz
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/etc/letsencrypt"
