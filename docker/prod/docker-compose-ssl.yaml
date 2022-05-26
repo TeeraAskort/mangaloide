@@ -21,6 +21,7 @@ services:
       - ../../tmp:/app/tmp
       - ../../userimages:/app/userimages
   nginx-ssl-proxy:
+    container_name: nginx-ssl-proxy
     image: danieldent/nginx-ssl-proxy
     restart: always
     build:

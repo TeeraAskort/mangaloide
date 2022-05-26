@@ -1,4 +1,3 @@
 FROM danieldent/nginx-ssl-proxy as deps
 
 RUN sed -i "/http {/a client_max_body_size 50M;" /etc/nginx/nginx.conf
-RUN nginx -s reload

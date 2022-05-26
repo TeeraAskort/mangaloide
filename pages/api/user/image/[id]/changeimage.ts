@@ -1,10 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-
 import { db } from "../../../../../database";
-
 import formidable from "formidable";
 import fs from "fs";
-import Jimp from "jimp";
+import sharp from "sharp";
 import UserModel from "../../../../../models/User";
 
 const mimeTypes = ["image/png", "image/gif", "image/jpeg", "image/jpg"];
@@ -75,14 +73,10 @@ const changeImage = (req: NextApiRequest, res: NextApiResponse<Data>) => {
 
         fs.copyFileSync(files.file[0].filepath, tmpPath);
 
-        Jimp.read(tmpPath)
-          .then((image) => {
-            return image
-              .quality(80)
-              .resize(256, 256)
-              .write(`${userPath}/image.jpg`);
-          })
-          .catch(console.log);
+        await sharp(tmpPath)
+          .resize(256, 256)
+          .jpeg({ mozjpeg: true })
+          .toFile(`${userPath}/image.jpg`);
 
         fs.unlinkSync(tmpPath);
 

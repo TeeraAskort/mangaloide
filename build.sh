@@ -11,6 +11,11 @@ if [ "$1" == "prod" ]; then
 
     docker container rm mangaloideapp mangaloidedb
 
+    if [ "$2" == "ssl" ]; then
+        docker container stop nginx-ssl-proxy
+        docker container rm nginx-ssl-proxy
+    fi
+
     if [ -d mongo ]; then
         sudo rm -r mongo
     fi
@@ -32,11 +37,11 @@ if [ "$1" == "prod" ]; then
     cp .env $directory
 
     if [ "$2" == "ssl" ]; then
-	docker-compose -f docker-compose-ssl.yaml up -d --build
+        docker-compose -f docker-compose-ssl.yaml up -d --build
     else
-	docker-compose -f docker-compose.yaml up -d --build
+        docker-compose -f docker-compose.yaml up -d --build
     fi
-    
+
     docker image prune -f
 
     docker container prune -f

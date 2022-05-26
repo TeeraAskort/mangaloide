@@ -1,6 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import formidable from "formidable";
-import Jimp from "jimp";
 import { db } from "../../../../../../database";
 import { ComicModel } from "../../../../../../models";
 import { IComic } from "../../../../../../models/Comic";
@@ -8,6 +7,7 @@ import AdmZip from "adm-zip";
 import fs from "fs";
 import mime from "mime-types";
 import { JWT } from "../../../../../../utils";
+import sharp from "sharp";
 
 type Data =
   | {
@@ -95,14 +95,17 @@ const postChapter = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
             });
           }
 
-          filesPath.forEach(async (file, index) => {
-            const image = await Jimp.read(file);
-            image.quality(90).write(`${destPath}/${index + 1}.jpg`);
+          Promise.all(
+            filesPath.map((file, index) =>
+              sharp(file)
+                .jpeg({ mozjpeg: true })
+                .toFile(`${destPath}/${index + 1}.jpg`)
+            )
+          ).then(() => {
+            fs.rmSync(tmpPath, { recursive: true, force: true });
+
+            fs.rmSync(zipTmpPath, { force: true });
           });
-
-          fs.rmSync(tmpPath, { recursive: true, force: true });
-
-          fs.rmSync(zipTmpPath, { force: true });
 
           comic.chapters.push({
             chNumber: parseFloat(chNumber[0]),

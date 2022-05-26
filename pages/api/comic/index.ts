@@ -4,7 +4,7 @@ import { db } from "../../../database";
 import { ComicModel, UserModel } from "../../../models";
 import formidable from "formidable";
 import fs from "fs";
-import Jimp from "jimp";
+import sharp from "sharp";
 import { JWT } from "../../../utils";
 
 const mimeTypes = ["image/png", "image/gif", "image/jpeg", "image/jpg"];
@@ -119,12 +119,13 @@ const postComic = async (req: NextApiRequest, res: NextApiResponse<Data>) => {
           fs.mkdirSync(comicPath);
         }
 
-        // Convert the image to jpeg and resize it with Jimp
-        const image = await Jimp.read(
-          `${process.env.TMP_PATH}/${files.file[0].originalFilename}`
-        );
         try {
-          image.quality(80).resize(366, 512).write(`${comicPath}/image.jpg`);
+          await sharp(
+            `${process.env.TMP_PATH}/${files.file[0].originalFilename}`
+          )
+            .resize(366, 512)
+            .jpeg({ mozjpeg: true })
+            .toFile(`${comicPath}/image.jpg`);
         } catch (error) {
           return res.status(500).json({ message: "Backend error" });
         }
