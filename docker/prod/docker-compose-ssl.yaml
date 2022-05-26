@@ -24,6 +24,7 @@ services:
     image: danieldent/nginx-ssl-proxy
     restart: always
     build:
+      context: ./
       dockerfile: ./SSLDockerfile
     environment:
       UPSTREAM: mangaloideapp:3000
