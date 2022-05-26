@@ -14,6 +14,7 @@ if [ "$1" == "prod" ]; then
     if [ "$2" == "ssl" ]; then
         docker container stop nginx-ssl-proxy
         docker container rm nginx-ssl-proxy
+        docker image rm danieldent/nginx-ssl-proxy
     fi
 
     if [ -d mongo ]; then
