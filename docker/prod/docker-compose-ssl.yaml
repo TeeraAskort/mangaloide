@@ -23,6 +23,8 @@ services:
   nginx-ssl-proxy:
     image: danieldent/nginx-ssl-proxy
     restart: always
+    build:
+      dockerfile: ./SSLDockerfile
     environment:
       UPSTREAM: 127.0.0.1:3000
       SERVERNAME: mangaloide.alderaeney.xyz
